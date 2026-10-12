@@ -1,17 +1,14 @@
 package se331.lab.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 import se331.lab.dao.EventDao;
 import se331.lab.entity.Event;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-
     final EventDao eventDao;
 
     @Override
