@@ -1,12 +1,13 @@
 package se331.lab.util;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import se331.lab.entity.*;
 
 import java.util.List;
 
-@Mapper
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface LabMapper {
     LabMapper INSTANCE = Mappers.getMapper(LabMapper.class);
     EventDTO getEventDto(Event event);

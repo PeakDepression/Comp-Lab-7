@@ -1,5 +1,6 @@
 package se331.lab.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class Event {
     @ManyToOne
     Organizer organizer;
 
-    @ManyToMany(mappedBy = "eventHistories")
-    List<Participant> participants;
+    @ManyToMany
+    @Builder.Default
+    List<Participant> participants = new ArrayList<>();
 }
