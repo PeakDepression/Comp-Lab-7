@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import se331.lab.entity.Event;
 import se331.lab.service.EventService;
@@ -44,5 +46,11 @@ public class EventController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The given id is not found");
         }
+    }
+
+    @PostMapping("/events")
+    public ResponseEntity<?> addEvent(@RequestBody Event event) {
+        Event output = eventService.save(event);
+        return ResponseEntity.ok(output);
     }
 }
