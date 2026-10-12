@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 import se331.lab.entity.Organizer;
 import se331.lab.service.OrganizerService;
@@ -48,5 +50,11 @@ public class OrganizerController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The given id is not found");
         }
+    }
+
+    @PostMapping("/organizers")
+    public ResponseEntity<?> addOrganizer(@RequestBody Organizer organizer) {
+        Organizer output = organizerService.save(organizer);
+        return ResponseEntity.ok(output);
     }
 }

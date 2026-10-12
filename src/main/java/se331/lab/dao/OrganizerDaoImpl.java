@@ -2,12 +2,14 @@ package se331.lab.dao;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Profile;
 import se331.lab.entity.Organizer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Profile("memory")
 public class OrganizerDaoImpl implements OrganizerDao {
     List<Organizer> organizerList;
 
@@ -50,5 +52,12 @@ public class OrganizerDaoImpl implements OrganizerDao {
                 .filter(organizer -> organizer.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public Organizer save(Organizer organizer) {
+        organizer.setId(organizerList.get(organizerList.size() - 1).getId() + 1);
+        organizerList.add(organizer);
+        return organizer;
     }
 }
