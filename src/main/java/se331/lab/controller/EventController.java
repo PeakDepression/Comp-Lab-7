@@ -19,20 +19,19 @@ public class EventController {
     final EventService eventService;
 
     @GetMapping("/events")
-    public ResponseEntity<?> getEventLists(@RequestParam(value = "_limit", required = false) Integer perPage,
-                                           @RequestParam(value = "_page", required = false) Integer page) {
-        Page<Event> pageOutput = eventService.getEvents(perPage, page);
+    public ResponseEntity<?> getEventLists(
+            @RequestParam(value = "_limit", required = false) Integer limit,
+            @RequestParam(value = "_per_page", required = false) Integer perPageParam,
+            @RequestParam(value = "_page", required = false, defaultValue = "1") Integer page) {
+
+        Integer pageSize = perPageParam != null ? perPageParam : (limit != null ? limit : 3);
+        Page<Event> pageOutput = eventService.getEvents(pageSize, page);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("x-total-count", String.valueOf(pageOutput.getTotalElements()));
-        try {
-            return ResponseEntity.ok()
-                    .headers(responseHeaders)
-                    .body(LabMapper.INSTANCE.getEventDto(pageOutput.getContent()));
-        } catch (IndexOutOfBoundsException e) {
-            return ResponseEntity.ok()
-                    .headers(responseHeaders)
-                    .body(LabMapper.INSTANCE.getEventDto(pageOutput.getContent()));
-        }
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(LabMapper.INSTANCE.getEventDto(pageOutput.getContent()));
     }
 
     @GetMapping("events/{id}")
