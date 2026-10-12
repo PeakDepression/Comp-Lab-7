@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 import se331.lab.entity.Event;
@@ -89,19 +90,27 @@ public class EventController {
     }
 
     @GetMapping("/events")
-    public ResponseEntity<?> getEventLists(@RequestParam(value = "_limit", required = false) Integer perPage,
-                                           @RequestParam(value = "_page", required = false) Integer page) {
+    public ResponseEntity<?> getEventLists(
+            @RequestParam(value = "_limit", required = false) Integer limit,
+            @RequestParam(value = "_per_page", required = false) Integer perPageParam,
+            @RequestParam(value = "_page", required = false) Integer page) {
+
+        Integer perPage = perPageParam != null ? perPageParam : limit;
         perPage = perPage == null ? eventList.size() : perPage;
         page = page == null ? 1 : page;
+
         Integer firstIndex = (page - 1) * perPage;
         List<Event> output = new ArrayList<>();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("x-total-count", String.valueOf(eventList.size()));
+
         try {
             for (int i = firstIndex; i < firstIndex + perPage; i++) {
                 output.add(eventList.get(i));
             }
-            return ResponseEntity.ok(output);
+            return ResponseEntity.ok().headers(responseHeaders).body(output);
         } catch (IndexOutOfBoundsException ex) {
-            return ResponseEntity.ok(output);
+            return ResponseEntity.ok().headers(responseHeaders).body(output);
         }
     }
 
